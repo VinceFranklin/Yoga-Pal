@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yoga Pal</title>
+    <style>
+         #video-container {
+            width: 80%;
+            margin: 0 auto;
+            position: relative;
+            text-align: center;
+        }
+        #score {
+            font-size: 24px;
+            color: green;
+            margin-top: 20px;
+        }
+        #loading-text {
+            font-size: 200%;
+            color: red;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none; /* Hidden by default */
+        }
+        .loading-dots::after {
+            content: '...';
+            display: inline-block;
+            animation: dots 1.5s steps(3, end) infinite;
+        }
+
+        @keyframes dots {
+            0% {
+                content: '';
+            }
+            33% {
+                content: '.';
+            }
+            66% {
+                content: '..';
+            }
+            100% {
+                content: '...';
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Yoga Pose Evaluation</h1>
+    <div id="video-container">
+        <div id="loading-text" class="loading-dots">Loading</div>
+        <img src="{{ url_for('video_feed') }}" id="video-feed" alt="Yoga Pose Evaluation" onload="hideLoadingText()">
+    </div>
+    <div id="score">Score: 0/100</div>
+    <div id="feed">
+        <div>RIGHT ELBOW : <span id="re"></span></div>
+        <div>LEFT ELBOW : <span id="le"></span></div>
+        <div>RIGHT ARM : <span id="ral"></span></div>
+        <div>LEFT ARM : <span id="lal"></span></div>
+        <div>RIGHT SIDE : <span id="rb"></span></div>
+        <div>LEFT SIDE: <span id="lb"></span></div>
+        <div>RIGHT KNEE: <span id="rk"></span></div>
+        <div>LEFT KNEE: <span id="lk"></span></div>
+    </div>
+
+    <script>
+
+        function hideLoadingText() {
+            document.getElementById('loading-text').style.display = 'none';
+        }
+        document.getElementById('loading-text').style.display = 'block';
+        async function fetchScore() {
+            const response = await fetch('/getScore');
+            const data = await response.json();
+            document.getElementById('score').innerHTML = `Score: ${data.score}`;
+            document.getElementById('re').innerHTML=data.feedback.re;
+            document.getElementById('le').innerHTML=data.feedback.le;
+            document.getElementById('ral').innerHTML=data.feedback.ral;
+            document.getElementById('lal').innerHTML=data.feedback.lal;
+            document.getElementById('rb').innerHTML=data.feedback.rb;
+            document.getElementById('lb').innerHTML=data.feedback.lb;
+            document.getElementById('rk').innerHTML=data.feedback.rk;
+            document.getElementById('lk').innerHTML=data.feedback.lk;
+        }
+
+        setInterval(fetchScore,1);
+    </script>
+</body>
+</html>
