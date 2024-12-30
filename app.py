@@ -200,11 +200,11 @@ def generate_frames():
 
 @app.route('/')
 def index():
-    return render_template('home.html')  # HTML page to show the video feed
+    return render_template('index.html')  # HTML page to show the video feed
 
 @app.route('/video_page')
 def video_page():
-    return render_template('index.html')
+    return render_template('home.html')
 
 @app.route('/video_feed')
 def video_feed():
